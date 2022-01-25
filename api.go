@@ -1,9 +1,13 @@
 package main
 
-import "encoding/json"
-import "fmt"
-// import "log"
-import "net/http"
+import (
+  "encoding/json"
+  "fmt"
+  // "log"
+  "net/http"
+
+  "github.com/gorilla/mux"
+)
 
 type Plant struct {
   Genus     string `json:"genus"`
@@ -22,8 +26,9 @@ func endpoint(writer http.ResponseWriter, request *http.Request) {
 }
 
 func handleRequests() {
-  http.HandleFunc("/", endpoint)
-  http.ListenAndServe(":8000", nil)
+  router := mux.NewRouter().StrictSlash(true)
+  router.HandleFunc("/", endpoint)  
+  http.ListenAndServe(":8000", router)
 }
 
 func main() {
