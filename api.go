@@ -5,6 +5,7 @@ import (
   "fmt"
   // "log"
   "net/http"
+  "strings"
 
   "github.com/gorilla/mux"
 )
@@ -19,15 +20,42 @@ type Plant struct {
 
 var Plants []Plant
 
-func endpoint(writer http.ResponseWriter, request *http.Request) {
+func all(writer http.ResponseWriter, request *http.Request) {
   fmt.Println("You've hit it")
 
   json.NewEncoder(writer).Encode(Plants)
 }
 
+func genus(writer http.ResponseWriter, request *http.Request) {
+  genus := mux.Vars(request)["genus"]
+  fmt.Println("You've hit it with", genus)
+
+  for _, plant := range Plants {
+    if strings.ToLower(plant.Genus) == strings.ToLower(genus) {
+      json.NewEncoder(writer).Encode(plant)
+    }
+  }
+}
+
+func species(writer http.ResponseWriter, request *http.Request) {
+  genus := mux.Vars(request)["genus"]
+  species := mux.Vars(request)["species"]
+  fmt.Println("You've hit it with", genus, species)
+
+  for _, plant := range Plants {
+    if strings.ToLower(plant.Genus) == strings.ToLower(genus) {
+      if strings.ToLower(plant.Species) == strings.ToLower(species) {
+        json.NewEncoder(writer).Encode(plant)
+      }
+    }
+  }  
+}
+
 func handleRequests() {
   router := mux.NewRouter().StrictSlash(true)
-  router.HandleFunc("/", endpoint)  
+  router.HandleFunc("/", all)
+  router.HandleFunc("/{genus}", genus)
+  router.HandleFunc("/{genus}/{species}", species)
   http.ListenAndServe(":8000", router)
 }
 
@@ -40,6 +68,12 @@ func main() {
       Species:  "arabica",
       Origin:   "Ethiopia",
       Wiki:     "https://en.wikipedia.org/wiki/Coffea_arabica",
+    },
+    Plant{
+      Genus:    "Coffea",
+      Species:  "canephora",
+      Origin:   "Ethiopia",
+      Wiki:     "https://en.wikipedia.org/wiki/Coffea_canephora",
     },
     Plant{
       Genus:    "Euphorbia",
