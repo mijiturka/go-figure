@@ -21,12 +21,21 @@ type Plant struct {
 var Plants []Plant
 
 func all(writer http.ResponseWriter, request *http.Request) {
+  if request.Method != "GET" {
+    writer.WriteHeader(http.StatusMethodNotAllowed)
+  }
+
   fmt.Println("You've hit it")
 
   json.NewEncoder(writer).Encode(Plants)
 }
 
 func genus(writer http.ResponseWriter, request *http.Request) {
+  if request.Method != "GET" {
+    writer.WriteHeader(http.StatusMethodNotAllowed)
+    return
+  }
+
   genus := mux.Vars(request)["genus"]
   fmt.Println("You've hit it with", genus)
 
@@ -40,6 +49,10 @@ func genus(writer http.ResponseWriter, request *http.Request) {
 }
 
 func species(writer http.ResponseWriter, request *http.Request) {
+  if request.Method != "GET" {
+    writer.WriteHeader(http.StatusMethodNotAllowed)
+  }
+
   genus := mux.Vars(request)["genus"]
   species := mux.Vars(request)["species"]
   fmt.Println("You've hit it with", genus, species)
