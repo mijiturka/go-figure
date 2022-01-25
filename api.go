@@ -35,6 +35,8 @@ func genus(writer http.ResponseWriter, request *http.Request) {
       json.NewEncoder(writer).Encode(plant)
     }
   }
+
+  writer.WriteHeader(http.StatusNotFound)
 }
 
 func species(writer http.ResponseWriter, request *http.Request) {
@@ -48,7 +50,9 @@ func species(writer http.ResponseWriter, request *http.Request) {
         json.NewEncoder(writer).Encode(plant)
       }
     }
-  }  
+  }
+
+  writer.WriteHeader(http.StatusNotFound)
 }
 
 func handleRequests() {
