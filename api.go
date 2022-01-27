@@ -10,14 +10,6 @@ import (
   "github.com/gorilla/mux"
 )
 
-type Plant struct {
-  Genus     string `json:"genus"`
-  Species   string `json:"species"`
-  Cultivar  string `json:"cultivar"`
-  Origin    string `json:"origin"`
-  Wiki      string `json:"wiki"`
-}
-
 var Plants []Plant
 
 func all(writer http.ResponseWriter, request *http.Request) {
