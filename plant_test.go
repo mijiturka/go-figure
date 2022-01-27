@@ -5,66 +5,39 @@ import (
   "testing"
 )
 
-func Test_stringer_name_basic(t *testing.T) {
-  plant := &Plant {
-    Genus:  "Some_Genus",
-    Species:  "some_species",
+func Test_stringer(t *testing.T) {
+  cases := []struct{
+    description string
+    plant       *Plant
+    expected    string
+  }{
+    {
+      "basic",
+      &Plant{Genus: "Coffea", Species: "arabica",},
+      "Coffea arabica",
+    },{
+      "with_variety",
+      &Plant{Genus: "Coffea", Species: "arabica", Variety: "Java"},
+      "Coffea arabica var. Java",
+    },{
+      "with_cultivar",
+      &Plant{Genus: "Coffea", Species: "arabica", Cultivar: "K7"},
+      "Coffea arabica 'K7'",
+    },{
+      "with_variety_and_cultivar",
+      &Plant{Genus: "Coffea", Species: "arabica", Variety: "Catimor", Cultivar: "Lempira"},
+      "Coffea arabica var. Catimor 'Lempira'",
+    },
   }
-  expected := "Some_Genus some_species"
 
-  if fmt.Sprintf("%v", plant) != expected {
-    t.Errorf("Expected %v, received %v", expected, fmt.Sprintf("%v", plant))
-  }
-  if fmt.Sprintf("%s", plant) != expected {
-    t.Errorf("Expected %s, received %s", expected, fmt.Sprintf("%s", plant))
-  }
-}
-
-func Test_stringer_name_with_variety(t *testing.T) {
-  plant := &Plant {
-    Genus:    "Some_Genus",
-    Species:  "some_species",
-    Variety:  "Some_variety",
-  }
-  expected := "Some_Genus some_species var. Some_variety"
-
-  if fmt.Sprintf("%v", plant) != expected {
-    t.Errorf("Expected %v, received %v", expected, fmt.Sprintf("%v", plant))
-  }
-  if fmt.Sprintf("%s", plant) != expected {
-    t.Errorf("Expected %s, received %s", expected, fmt.Sprintf("%s", plant))
-  }
-}
-
-func Test_stringer_name_with_cultivar(t *testing.T) {
-  plant := &Plant {
-    Genus:    "Some_Genus",
-    Species:  "some_species",
-    Cultivar:  "Some_cultivar",
-  }
-  expected := "Some_Genus some_species 'Some_cultivar'"
-
-  if fmt.Sprintf("%v", plant) != expected {
-    t.Errorf("Expected %v, received %v", expected, fmt.Sprintf("%v", plant))
-  }
-  if fmt.Sprintf("%s", plant) != expected {
-    t.Errorf("Expected %s, received %s", expected, fmt.Sprintf("%s", plant))
-  }
-}
-
-func Test_stringer_name_with_variety_and_cultivar(t *testing.T) {
-  plant := &Plant {
-    Genus:    "Some_Genus",
-    Species:  "some_species",
-    Variety:  "Some_variety",
-    Cultivar:  "Some_cultivar",
-  }
-  expected := "Some_Genus some_species var. Some_variety 'Some_cultivar'"
-
-  if fmt.Sprintf("%v", plant) != expected {
-    t.Errorf("Expected %v, received %v", expected, fmt.Sprintf("%v", plant))
-  }
-  if fmt.Sprintf("%s", plant) != expected {
-    t.Errorf("Expected %s, received %s", expected, fmt.Sprintf("%s", plant))
+  for _, c := range cases {
+    t.Run(fmt.Sprintf("%s", c.description), func(t *testing.T) {
+      if fmt.Sprintf("%v", c.plant) != c.expected {
+        t.Errorf("Expected %v, received %v", c.expected, fmt.Sprintf("%v", c.plant))
+      }
+      if fmt.Sprintf("%s", c.plant) != c.expected {
+        t.Errorf("Expected %s, received %s", c.expected, fmt.Sprintf("%s", c.plant))
+      }
+    })
   }
 }
